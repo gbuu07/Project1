@@ -219,7 +219,25 @@ class Dictionary:
                 result.append(w)
         return result
 
+    def crack_lock(self, lock):
+        """lock is a list of options (list of letters) per code letter.
+        Stochastically tries 6*c random combinations (c = product of
+        number of options per letter) and returns a new (unsorted)
+        dictionary with every distinct word found in self (assumed sorted)."""
+        c = 1
+        for options in lock:
+            c *= len(options)
 
+        new_dict = Dictionary()
+        for _ in range(6 * c):
+            word = ""
+            for options in lock:
+                idx = random.randint(0, len(options) - 1)
+                word += options[idx]
+            if self.bsearch(word):
+                if not new_dict.lsearch(word):
+                    new_dict.insert(word)
+        return new_dict
 
 
 
